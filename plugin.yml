@@ -1,9 +1,7 @@
 name: TimerBan
 author: onebone
-api:
-- 1.2.0
-- 1.2.1
-version: "2.1"
+api: 3.0.0-ALPHA7
+version: "2.1-r110patched"
 main: onebone\timerban\TimerBan
 commands:
  timerban:

@@ -12,7 +12,9 @@ use pocketmine\utils\Config;
 use pocketmine\Player;
 
 class TimerBan extends PluginBase implements Listener{
+	/** @var Config */
 	private $banList;
+	/** @var Config */
 	private $ipBanList;
 
 	/**
@@ -42,7 +44,7 @@ class TimerBan extends PluginBase implements Listener{
 	 * Bans IP address for specific time
 	 *
 	 * @var Player|string	$address
-	 * @var float		$time
+	 * @var float			$time
 	 *
 	 * @return bool
 	 */
@@ -118,7 +120,7 @@ class TimerBan extends PluginBase implements Listener{
 		if($this->banList->exists(strtolower($player->getName()))){
 			if($this->banList->get($player->getName()) > $now){
 				$time = ($this->banList->get(strtolower($player->getName())) - $now) / 3600;
-				$player->close("", "You are banned. You'll unban through - ".(int)$time." hour(s)");
+				$player->close("", "You are banned. You'll unban in - ".(int)$time." hour(s)");
 				$event->setCancelled();
 			}else{
 				$this->banList->remove(strtolower($player->getName()));
@@ -128,7 +130,7 @@ class TimerBan extends PluginBase implements Listener{
 		if($this->ipBanList->exists($player->getAddress())){
 			if($this->ipBanList->get($player->getAddress()) > $now){
 				$time = ($this->banList->get(strtolower($player->getName())) - $now) / 3600;
-				$player->close("", "You are banned. You'll unban through - ".(int)$time." hour(s)");
+				$player->close("", "You are banned. You'll unban in - ".(int)$time." hour(s)");
 				$event->setCancelled();
 			}else{
 				$this->ipBanList->remove($player->getAddress());
@@ -136,7 +138,7 @@ class TimerBan extends PluginBase implements Listener{
 		}
 	}
 
-	public function onCommand(CommandSender $sender, Command $command, $label, array $params){
+	public function onCommand(CommandSender $sender, Command $command, string $label, array $params): bool{
 		switch($command->getName()){
 			case "timerban":
 				$sub = array_shift($params);
