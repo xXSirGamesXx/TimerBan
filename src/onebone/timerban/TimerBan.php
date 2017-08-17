@@ -116,10 +116,11 @@ class TimerBan extends PluginBase implements Listener{
 
 	public function onPlayerLogin(PlayerPreLoginEvent $event){
 		$player = $event->getPlayer();
+		$p = strtolower($player->getName());
 		$now = time();
 		if($this->banList->exists(strtolower($player->getName()))){
-			if($this->banList->get($player->getName()) > $now){
-				$time = ($this->banList->get(strtolower($player->getName())) - $now) / 3600;
+			if($this->banList->get($p) > $now){
+				$time = ($this->banList->get(strtolower($p)) - $now) / 3600;
 				$player->close("", "You are banned. You'll unban in - ".(int)$time." hour(s)");
 				$event->setCancelled();
 			}else{
@@ -145,6 +146,8 @@ class TimerBan extends PluginBase implements Listener{
 				switch($sub){
 					case "add":
 					$player = array_shift($params);
+					$eplayer = $this->getServer()->getPlayer($player);
+					$name = strtolower($eplayer->getName());
 					$after = array_shift($params);
 					$reason = implode(" ", $params);
 					if(trim($player) === "" or !is_numeric($after)){
@@ -155,9 +158,14 @@ class TimerBan extends PluginBase implements Listener{
 					$secAfter = $after*3600;
 
 					$due = $secAfter + time();
+					if($name !== null){
 
-					$this->banList->set(strtolower($player), $due);
+					$this->banList->set(strtolower($name), $due);
 					$this->banList->save();
+					}else{
+						$this->banList->set(strtolower($player), $due);
+						$this->banList->save();
+					}
 
 					$sender->sendMessage("[TimerBan] $player has been banned for $after hour(s).");
 
